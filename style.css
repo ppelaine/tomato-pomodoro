@@ -1,0 +1,423 @@
+/* === RESET === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* === VARIABLES === */
+:root {
+  --tomato-size: clamp(100px, 22vw, 130px);
+  --ring-size: clamp(180px, 38vw, 220px);
+  --timer-font: clamp(42px, 12vw, 64px);
+  --body-gap: clamp(16px, 3vh, 24px);
+}
+
+/* === BASE === */
+body {
+  font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 50%, #fff0e0 100%);
+  color: #2d3436;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--body-gap);
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* === TOMATO CHARACTER === */
+#tomato-container {
+  position: relative;
+}
+
+#tomato-face {
+  transition: transform 0.4s ease;
+}
+
+.tomato-body {
+  width: var(--tomato-size);
+  height: var(--tomato-size);
+  background: radial-gradient(circle at 35% 30%, #ff8a8a 0%, #ff6b6b 50%, #e85555 100%);
+  border-radius: 50%;
+  position: relative;
+  box-shadow:
+    0 8px 30px rgba(255, 107, 107, 0.35),
+    inset 0 -8px 16px rgba(0, 0, 0, 0.08),
+    inset 0 8px 16px rgba(255, 255, 255, 0.15);
+  transition: box-shadow 0.5s ease;
+}
+
+/* -- leaf -- */
+.tomato-leaf {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(10deg);
+  width: calc(var(--tomato-size) * 0.22);
+  height: calc(var(--tomato-size) * 0.15);
+  background: linear-gradient(135deg, #51cf66, #40c057);
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+.tomato-leaf::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 60%;
+  width: 60%;
+  height: 60%;
+  background: linear-gradient(135deg, #69db7c, #51cf66);
+  border-radius: 50% 50% 0 50%;
+  transform: rotate(30deg);
+}
+
+/* -- eyes -- */
+.tomato-eye {
+  position: absolute;
+  top: 29%;
+  width: 11%;
+  height: 14%;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.tomato-eye::after {
+  content: '';
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 40%;
+  background: #2d3436;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.tomato-eye.left {
+  left: 24%;
+}
+
+.tomato-eye.right {
+  right: 24%;
+}
+
+/* -- blush -- */
+.tomato-blush {
+  position: absolute;
+  top: 42%;
+  width: 15%;
+  height: 9%;
+  background: radial-gradient(ellipse, rgba(255, 150, 150, 0.6) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.tomato-blush.left {
+  left: 14%;
+}
+
+.tomato-blush.right {
+  right: 14%;
+}
+
+/* -- mouth -- */
+.tomato-mouth {
+  position: absolute;
+  bottom: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14%;
+  height: 7%;
+  border-bottom: 3px solid #c0392b;
+  border-radius: 0 0 50% 50%;
+  transition: all 0.3s ease;
+}
+
+/* === TOMATO FACE STATES === */
+
+#tomato-face.idle {
+  animation: tomato-bounce 2.5s ease-in-out infinite;
+}
+
+#tomato-face.focus {
+  animation: tomato-pulse 1s ease-in-out infinite;
+}
+
+#tomato-face.focus .tomato-body {
+  box-shadow:
+    0 8px 35px rgba(255, 107, 107, 0.5),
+    inset 0 -8px 16px rgba(0, 0, 0, 0.08),
+    inset 0 8px 16px rgba(255, 255, 255, 0.15);
+}
+
+#tomato-face.focus .tomato-eye::after {
+  transform: translateX(-50%) scaleY(0.6);
+}
+
+#tomato-face.focus .tomato-mouth {
+  width: 10%;
+  height: 4%;
+  border-bottom-width: 2.5px;
+  bottom: 24%;
+}
+
+#tomato-face.break {
+  animation: tomato-sway 3s ease-in-out infinite;
+}
+
+#tomato-face.break .tomato-body {
+  box-shadow:
+    0 8px 35px rgba(81, 207, 102, 0.45),
+    inset 0 -8px 16px rgba(0, 0, 0, 0.08),
+    inset 0 8px 16px rgba(255, 255, 255, 0.15);
+}
+
+#tomato-face.break .tomato-mouth {
+  width: 18%;
+  height: 9%;
+  border-radius: 0 0 50% 50%;
+  bottom: 20%;
+}
+
+#tomato-face.paused .tomato-eye::after {
+  transform: translateX(-50%) translateY(3px);
+}
+
+#tomato-face.paused .tomato-mouth {
+  width: 9%;
+  height: 5%;
+  bottom: 24%;
+  border-bottom: none;
+  border-top: 2px solid #c0392b;
+  border-radius: 0;
+}
+
+/* === ANIMATIONS === */
+@keyframes tomato-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes tomato-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes tomato-sway {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  75% { transform: rotate(-3deg); }
+}
+
+@keyframes ring-glow {
+  0%, 100% { filter: drop-shadow(0 0 3px #ff6b6b); }
+  50% { filter: drop-shadow(0 0 12px #ff4444); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === TIMER DISPLAY === */
+#timer-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#timer-label {
+  font-size: clamp(13px, 3vw, 16px);
+  font-weight: 600;
+  color: #636e72;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  animation: fade-in 0.3s ease;
+}
+
+#timer-display {
+  font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-size: var(--timer-font);
+  font-weight: 700;
+  color: #2d3436;
+  letter-spacing: 2px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* === PROGRESS RING === */
+#progress-ring {
+  width: var(--ring-size);
+  height: var(--ring-size);
+  margin-top: 4px;
+}
+
+#progress-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.bg-ring {
+  fill: none;
+  stroke: #f0d0d0;
+  stroke-width: 6;
+}
+
+.progress-ring {
+  fill: none;
+  stroke: #ff6b6b;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 282.74;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.4s linear, stroke 0.5s ease;
+}
+
+.progress-ring.break-mode {
+  stroke: #51cf66;
+}
+
+.progress-ring.urgent {
+  animation: ring-glow 0.6s ease-in-out infinite;
+}
+
+/* === CONTROLS === */
+#controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: clamp(14px, 3.5vw, 15px);
+  font-weight: 600;
+  padding: clamp(10px, 2.5vw, 12px) clamp(22px, 5vw, 28px);
+  border-radius: 30px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  letter-spacing: 0.3px;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none !important;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff6b6b, #e85555);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(255, 107, 107, 0.35);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #ffd43b, #fab005);
+  color: #2d3436;
+  box-shadow: 0 4px 14px rgba(255, 212, 59, 0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #636e72;
+  border: 2px solid #ddd;
+}
+
+/* === SESSION INFO === */
+#session-info {
+  font-size: clamp(12px, 2.8vw, 14px);
+  color: #b2bec3;
+  font-weight: 500;
+}
+
+/* === RESPONSIVE: phones === */
+@media (max-width: 480px) {
+  body {
+    padding: 8px;
+    align-items: flex-start;
+    padding-top: 8vh;
+  }
+
+  #app {
+    gap: 14px;
+    padding: 16px 12px;
+  }
+
+  #controls {
+    gap: 10px;
+  }
+}
+
+/* === RESPONSIVE: landscape on phones === */
+@media (max-height: 500px) {
+  body {
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  #app {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    max-width: 100%;
+  }
+
+  #tomato-container {
+    flex-shrink: 0;
+  }
+
+  #controls {
+    width: 100%;
+  }
+}
+
+/* === HOVER (non-touch only) === */
+@media (hover: hover) {
+  .btn-primary:hover:not(:disabled) {
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    box-shadow: 0 6px 20px rgba(255, 212, 59, 0.5);
+  }
+
+  .btn-outline:hover:not(:disabled) {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.15);
+  }
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomato Pomodoro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="tomato-container">
+      <div id="tomato-face" class="idle">
+        <div class="tomato-body">
+          <div class="tomato-leaf"></div>
+          <div class="tomato-eye left"></div>
+          <div class="tomato-eye right"></div>
+          <div class="tomato-blush left"></div>
+          <div class="tomato-blush right"></div>
+          <div class="tomato-mouth"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="timer-container">
+      <div id="timer-label">Focus Time</div>
+      <div id="timer-display">25:00</div>
+      <div id="progress-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="bg-ring" cx="50" cy="50" r="45" />
+          <circle class="progress-ring" cx="50" cy="50" r="45" id="progress-circle" />
+        </svg>
+      </div>
+    </div>
+
+    <div id="controls">
+      <button id="btn-start" class="btn btn-primary">Start</button>
+      <button id="btn-pause" class="btn btn-secondary" disabled>Pause</button>
+      <button id="btn-reset" class="btn btn-outline">Reset</button>
+    </div>
+
+    <div id="session-info">
+      <span id="session-count">Session: 0</span>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# Ignore build outputs
+/dist
+/dist-electron
+/.electron-cache
+/release
+
+# Node modules and lockfiles are handled by root .gitignore, but keep local build artifacts ignored
+node_modules/
